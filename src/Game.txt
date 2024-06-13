@@ -1,0 +1,84 @@
+<?php
+
+namespace App;
+
+class Game {
+
+    protected array $rolls = [];
+    const FRAMES_PER_GAME = 10;
+    
+    public function roll(int $pins) {
+        $this->rolls[] = $pins;
+    }   
+
+    public function isStrike($roll){
+        if($this->rolls[$roll] == 10){
+            return true;
+        }
+        return false;
+    }
+
+    public function isSpare($roll){
+        if($this->rolls[$roll] + $this->rolls[$roll + 1] === 10){
+            return true;
+        }
+        return false;
+    }
+
+    public function defaultFrameScore($roll){
+        return $this->rolls[$roll] + $this->rolls[$roll + 1];
+    }
+
+    public function strikeBonus(int $roll) : int {
+        return $this->rolls[$roll + 1] + $this->rolls[$roll + 2];
+    }
+
+    public function spareBonus(int $roll) : int {
+        return $this->rolls[$roll + 2];
+    }
+
+    public function score() {
+
+        $score = 0; 
+        $roll = 0;
+
+        foreach (range(1, self::FRAMES_PER_GAME) as $frame) {
+            
+
+            // Strike
+            if ($this->isStrike($roll)){
+                
+                $score += $this->rolls[$roll];
+                $score += $this->strikeBonus($roll);
+
+                $roll += 1;
+
+                continue;
+            }
+
+            
+            // Spare
+            if ($this->isSpare($roll)){
+                
+                $score += $this->defaultFrameScore($roll );   
+                $score += $this->spareBonus($roll);
+
+                $roll += 2;
+
+                continue;
+            }
+        
+
+            // Default 
+            $score += $this->defaultFrameScore($roll);    
+
+            $roll += 2;
+        
+
+            
+        }
+        
+        return $score;
+    }
+
+}

@@ -1,0 +1,74 @@
+<?php
+
+namespace App;
+
+use Exception;
+use PhpParser\Node\Expr\Exit_;
+
+class StringCalculator {
+
+    const MAX_NUMBER_ALLOWED = 1000;
+     
+    protected string $delimeter = ",|\n";
+
+
+    public function add($number){
+
+        if (!$number){
+            return 0;
+        } 
+
+        $number = $this->parseString($number);
+
+        $numbers = $this
+                    ->disallowNegatives($number)
+                    ->ignoreNumbersGreaterThanMax($number);
+
+        return array_sum($numbers);
+
+
+    }
+
+
+    /**
+     * HELPERS
+     */
+    /*
+    protected function ignoreNumbersGreaterThanMax(array $number) : array {
+        return array_filter($number, function($number){
+            return $number <= self::MAX_NUMBER_ALLOWED;
+        });
+    }
+    */
+
+    protected function ignoreNumbersGreaterThanMax(array $numbers) : array {
+        return array_filter($numbers, fn($number) => $number <= self::MAX_NUMBER_ALLOWED);
+    }
+
+    protected function parseString(string $number){
+        $customDelimeter = "\/\/(.)\n";
+
+        if( preg_match("/{$customDelimeter}/", $number, $matches) ) {
+            
+            $this->delimeter = $matches[1]; 
+            $number = str_replace($matches[0], '', $number);
+        }
+        
+        return preg_split("/{$this->delimeter}/", $number);
+    }
+
+
+
+
+    protected function disallowNegatives(array $numbers) : StringCalculator {
+        foreach ($numbers as $number) {
+            if ($number < 0){
+                throw new Exception("Negative numbers are disallowed!");
+            }
+        }
+
+        return $this;
+    }
+
+
+}

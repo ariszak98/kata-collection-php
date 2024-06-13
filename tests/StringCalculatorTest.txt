@@ -1,0 +1,70 @@
+<?php
+require __DIR__ . '/../vendor/autoload.php';
+
+use App\StringCalculator;
+use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\DataProvider;
+
+class StringCalculatorTest extends TestCase {
+
+    #[Test]
+    public function accept_custom_delimeters(){
+
+        $calculator = new StringCalculator();
+        $this->assertSame(20, $calculator->add("//:\n5:5:10"));
+    }
+
+
+    #[Test]
+    public function numbers_greater_than_1000_are_ignored() {
+
+        $calculator = new StringCalculator();
+        $this->assertSame(5, $calculator->add("5,1001"));
+    }
+
+
+    #[Test]
+    public function negative_numbers_not_allowed(){
+
+        $calculator = new StringCalculator();
+        $this->expectException(\Exception::class);
+
+        $calculator->add("5,-4");
+    }
+
+    #[Test]
+    public function it_finds_the_sum_of_any_numbers_seperated_by_newline(){
+
+        $calculator = new StringCalculator();
+        $this->assertSame(10, $calculator->add("5\n5"));
+    }
+
+
+    #[Test]
+    public function it_evaluates_an_empty_string_as_zero(){
+
+        $calculator = new StringCalculator();
+        $this->assertSame(0, $calculator->add(''));
+    }
+
+    #[Test]
+    public function it_finds_the_sum_of_a_single_number(){
+
+        $calculator = new StringCalculator();
+        $this->assertSame(5, $calculator->add('5'));
+    }
+
+    #[Test]
+    public function it_finds_the_sum_of_any_numbers(){
+
+        $calculator = new StringCalculator();
+        $this->assertSame(19, $calculator->add('5,5,5,4'));
+    }
+
+    
+
+
+
+
+}
