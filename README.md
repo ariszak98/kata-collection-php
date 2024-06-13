@@ -10,3 +10,4 @@ This is a Collection 5 very intresting Code Katas that were solved with PHP and 
 - Roman Numerals
 - String Calculator
 - Bowling Game
+- FizzBuzz
