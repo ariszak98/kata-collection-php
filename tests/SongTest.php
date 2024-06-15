@@ -76,20 +76,15 @@ class SongTest extends TestCase {
 
     }
 
+    
+    #[Test]
+    public function it_gets_the_lyrics()  {
 
+        $expected = file_get_contents(__DIR__ . '/stubs/lyrics.stub');
+        $result = (new Song)->sing();
 
-
-
-
-
-    // #[Test]
-    // public function it_gets_the_lyrics()  {
-
-    //     $expected = file_get_contents(__DIR__ . '/stubs/lyrics.stub');
-    //     $result = (new Song)->verse(99);
-
-    //     $this->assertSame($expected, $result);
-    // }
+        $this->assertSame($expected, $result);
+    }
 
  
 
